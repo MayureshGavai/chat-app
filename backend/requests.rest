@@ -1,0 +1,16 @@
+GET http://localhost:3000/api/chats
+
+###
+GET http://localhost:3000/api/chats/617a077e18c25468bc7c4dd4
+
+
+###
+POST http://localhost:3000/api/user
+Content-Type: application/json
+
+{
+    "name":"mayuresh",
+    "email":"mayuresh@gmail.com",
+    "password":"mayuresh",
+    "image":"https://avatar.iran.liara.run/public/41"
+}
