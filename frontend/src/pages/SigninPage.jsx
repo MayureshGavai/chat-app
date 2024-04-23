@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import ChatLogo from '../assets/ChatLogo.png'
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const SigninPage = () => {
  
@@ -18,35 +20,42 @@ const SigninPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ email, password });
-    // const success = await signinUser({email,password})
-    // if(success){
-    //   setEmail("");
-    //   setPassword("");
-    //   setTimeout(()=>{
-    //     navigate('/')
-    //   },2000)
-    // }else{
-    //   console.error('Signin failed')
-    // }
+    const {data} = await axios.post('http://localhost:3000/api/user/signin',{email,password})
+    console.log(data)
+    if(data){
+      setEmail("");
+      setPassword("");
+      toast.success("Signin Sucessful.!!",{
+        position:"top-center"
+      })
+      setTimeout(()=>{
+        navigate("/")
+      },2000)
+    }else{
+      toast.error("Signin failed",{
+        position:"top-center"
+      })
+    }
   };
 
   const guestUser = async () => {
     const guestMail = "guest@gmail.com"
-    const guestPassword = "guest"
-    try{
-      const success = await signinUser({email:guestMail,password:guestPassword})
-      if(success){
-        setEmail("");
-        setPassword("");
-        setTimeout(()=>{
-          navigate('/')
-        },2000)
-      }else{
-        console.error('Signin failed')
-      }
-    }catch(err){
-      console.error('Error in signin')
+    const guestPassword = "Guest"
+    const {data} = await axios.post('http://localhost:3000/api/user/signin',{email:guestMail,password:guestPassword})
+    console.log(data)
+    if(data){
+      setEmail("");
+      setPassword("");
+      toast.success("Signin Sucessful.!!",{
+        position:"top-center"
+      })
+      setTimeout(()=>{
+        navigate("/")
+      },2000)
+    }else{
+      toast.error("Signin failed",{
+        position:"top-center"
+      })
     }
   }
 

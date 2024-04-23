@@ -14,3 +14,13 @@ Content-Type: application/json
     "password":"mayuresh",
     "image":"https://avatar.iran.liara.run/public/41"
 }
+
+
+###
+POST http://localhost:3000/api/user/signin
+Content-Type: application/json
+
+{
+    "email":"mayuresh@gmail.com",
+    "password":"mayuresh"
+}

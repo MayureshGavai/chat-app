@@ -1,5 +1,7 @@
+import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const SignupPage = () => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -37,7 +39,20 @@ const SignupPage = () => {
 
     const handleSubmit = async(e) =>{
       e.preventDefault()
-      console.log({image,email,name,password})
+      const {data} = await axios.post('http://localhost:3000/api/user',{name,email,password,image})
+      if(data){
+        console.log(data)
+        setName("")
+        setEmail("")
+        setPassword("")
+        toast.success("Signup Sucessful.!!",{
+          position:"top-center"
+        })
+      }else{
+        toast.error("Signup failed",{
+          position:"top-center"
+        })
+      }
     }
   
   return (

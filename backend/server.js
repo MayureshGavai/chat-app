@@ -1,26 +1,31 @@
 import express from "express"
+import morgan from "morgan"
+import cors from "cors"
 import { chats } from "./src/data/data.js"
 import { configDotenv } from "dotenv"
 import connectDB from "./src/config/dbConfig.js"
 import userRoutes from "./src/routes/user.route.js"
+import chatRoutes from "./src/routes/chat.route.js"
 import { errorHandler, notFound } from "./src/middleware/error.middleware.js"
 
 configDotenv()
 connectDB()
 const app = express()
 
+app.use(cors())
+app.use(morgan("dev"))
 app.use(express.json())
-app.use(notFound)
-app.use(errorHandler)
-
+// app.use(notFound())
+// app.use(errorHandler())
 
 app.use('/api/user',userRoutes)
+app.use('/api/chat',chatRoutes)
 
 const PORT = process.env.PORT || 3000
 
 
 app.get("/",(req,res)=>{
-    res.send('hello world')
+    res.json({message:'hello world'})
 })
 
 app.get("/api/chats",(req,res)=>{
