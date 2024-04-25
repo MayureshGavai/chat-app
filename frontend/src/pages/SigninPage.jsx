@@ -46,6 +46,7 @@ const SigninPage = () => {
     if(data){
       setEmail("");
       setPassword("");
+      localStorage.setItem("userInfo",JSON.stringify(data))
       toast.success("Signin Sucessful.!!",{
         position:"top-center"
       })
