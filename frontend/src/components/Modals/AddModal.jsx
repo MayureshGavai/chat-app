@@ -5,6 +5,7 @@ import { Tab } from "@headlessui/react";
 import { IoAdd, IoClose } from "react-icons/io5";
 import { useTheme } from "../../context/ThemeContext";
 import AllUsers from "../AllUsers";
+import CreateGroup from "../CreateGroup";
 
 export default function AddModal() {
   const { themeMode } = useTheme();
@@ -122,7 +123,9 @@ export default function AddModal() {
                         <Tab.Panel>
                           <AllUsers closeModal={()=>closeModal}/>
                         </Tab.Panel>
-                        <Tab.Panel>Group creation</Tab.Panel>
+                        <Tab.Panel>
+                          <CreateGroup/>
+                        </Tab.Panel>
                       </Tab.Panels>
                     </Tab.Group>
                   </div>

@@ -46,7 +46,7 @@ const AllUsers = ({closeModal}) => {
     }
   return (
     <div>
-        <h1>All Users</h1>
+        <h1 className='font-semibold'>All Users</h1>
         {
             loading ? (
                 <div className=' flex items-center justify-center'>
