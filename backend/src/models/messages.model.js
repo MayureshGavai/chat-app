@@ -23,4 +23,4 @@ const messagesSchema = mongoose.Schema({
 }
 )
 
-export const Messages = mongoose.model('message',messagesSchema)
+export const Message = mongoose.model('Message',messagesSchema)

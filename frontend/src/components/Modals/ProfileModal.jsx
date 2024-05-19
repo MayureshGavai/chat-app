@@ -3,8 +3,9 @@ import { Fragment, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { IoAdd, IoClose } from "react-icons/io5";
 import { useTheme } from "../../context/ThemeContext";
+import { FiInfo } from "react-icons/fi";
 
-export default function ProfileModal({className}) {
+export default function ProfileModal({user}) {
   const { themeMode } = useTheme();
   let [isOpen, setIsOpen] = useState(false);
 
@@ -28,12 +29,11 @@ export default function ProfileModal({className}) {
         <button
           type="button"
           onClick={openModal}
-          className={`${className}`}
-        //   className={`rounded-md p-1 text-sm font-medium ${
-        //     themeMode === "light" ? "text-black" : "text-white"
-        //   } `}
+          className={`rounded-md p-1 text-sm font-medium ${
+            themeMode === "light" ? "text-black" : "text-white"
+          } `}
         >
-          Profile
+          <FiInfo className="text-2xl"/>
         </button>
       </div>
 
@@ -74,7 +74,7 @@ export default function ProfileModal({className}) {
                     className="text-lg font-medium leading-6"
                   >
                     <div className="flex justify-between items-center">
-                      Profile Info
+                      Profile
                       <button
                         className="bg-red-500 p-0.5 rounded-full text-white"
                         onClick={closeModal}
@@ -86,7 +86,14 @@ export default function ProfileModal({className}) {
 
                   {/* Dialog Content */}
                   <div className="mt-4">
-                    
+                    <div className="flex items-center">
+                      <img src={user.image} className="w-12 h-12 rounded-full" alt="" />
+                      <div className="ml-4">
+                      <h1 className="">Name : <span className="capitalize font-semibold">{user.name}</span></h1>
+                    <h1 className="">Email : <span className="font-semibold">{user.email}</span></h1>
+                      </div>
+                    </div>
+
                   </div>
                 </Dialog.Panel>
               </Transition.Child>

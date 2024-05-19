@@ -10,10 +10,14 @@ export const useTheme = () => {
 };
 
 export const ThemeProvider = ({ children }) => {
-    const [themeMode, setThemeMode] = useState("light");
+    const [themeMode, setThemeMode] = useState(localStorage.getItem('themeMode') || 'light');
     
     const toggleTheme = () => {
-        setThemeMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+        setThemeMode((prevMode) => {
+            const newMode = prevMode === "light" ? "dark" : "light"
+            localStorage.setItem('themeMode',newMode)
+            return newMode
+        });
     };
 
     return (

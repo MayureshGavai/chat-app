@@ -25,7 +25,8 @@ const SigninPage = () => {
     if(data){
       setEmail("");
       setPassword("");
-      toast.success("Signin Sucessful.!!",{
+      localStorage.setItem("userInfo",JSON.stringify(data))
+      toast.success("Signin Successful.!!",{
         position:"top-center"
       })
       setTimeout(()=>{
@@ -47,7 +48,7 @@ const SigninPage = () => {
       setEmail("");
       setPassword("");
       localStorage.setItem("userInfo",JSON.stringify(data))
-      toast.success("Signin Sucessful.!!",{
+      toast.success("Signin Successful.!!",{
         position:"top-center"
       })
       setTimeout(()=>{
@@ -61,7 +62,7 @@ const SigninPage = () => {
   }
 
   return (
-    <div className="w-1/4 mx-auto border rounded-lg mt-8 py-2">
+    <div className="w-3/4 md:w-1/2 lg:w-1/4 mx-auto border rounded-lg mt-8 py-2">
       <div className="flex flex-col items-center justify-center mt-3">
       <div className="flex flex-col items-center justify-center text-lg">
           <img src={ChatLogo} alt="" className='w-12'/>
@@ -146,6 +147,7 @@ const SigninPage = () => {
         <button
           type="submit"
           className={`w-full p-2 text-white  rounded-md hover:bg-black/[0.7] active:bg-black/[0.5] ${loading ? 'bg-stone-600': 'bg-black '}`}
+          onClick={handleSubmit}
         >
           {loading ? "Loading" : "Submit"}
         </button>

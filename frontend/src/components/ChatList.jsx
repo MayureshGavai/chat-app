@@ -9,17 +9,16 @@ import { useTheme } from "../context/ThemeContext";
 import AddModal from "./Modals/AddModal";
 import { toast } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
-// import ProfileModal from './Modals/AddModal';
+import { useNavigate } from "react-router-dom";
 
-const ChatList = () => {
-  const { user, chats, setChats, selectedChat, setSelectedChat } =
-    useChatContext();
+const ChatList = ({ fetchAgain }) => {
+  const { user, chats, setChats, selectedChat, setSelectedChat } = useChatContext();
+  const navigate = useNavigate();
   const { themeMode, toggleTheme } = useTheme();
   const [chatLoading, setChatLoading] = useState(false);
-  console.log(chats);
 
   const getSender = (loggedUser, users) => {
-    return users[0]?._id === loggedUser._id ? users[1].name : users[0].name;
+    return users[0]?._id === loggedUser._id ? users[1] : users[0];
   };
 
   const fetchChats = async () => {
@@ -45,11 +44,15 @@ const ChatList = () => {
 
   useEffect(() => {
     fetchChats();
-  }, [user]);
+  }, [fetchAgain]);
 
-  // const signoutHandle = () => {
-
-  // }
+  const signoutHandler = () => {
+    localStorage.removeItem("userInfo");
+    navigate("/signin");
+    toast.success("Signout Successful.!!", {
+      position: "top-center",
+    });
+  };
 
   return (
     <div
@@ -57,7 +60,7 @@ const ChatList = () => {
         themeMode === "dark" ? "dark" : "light"
       } `}
     >
-      <div className="dark:text-white dark:bg-gray-900 h-full">
+      <div className="dark:text-white dark:bg-gray-900 h-full flex flex-col">
         <div className="w-full px-4 py-3 shadow-sm flex justify-between items-center dark:border-b dark:border-gray-600">
           <img
             src={themeMode === "light" ? ChatLogo : DarkChatLogo}
@@ -69,7 +72,7 @@ const ChatList = () => {
             className="relative inline-block text-left dark:bg-black-900 dark:text-white"
           >
             <div className="p-0 m-0 w-8 h-8">
-              <Menu.Button className=" inline-flex items-center relative rounded-full hover:shadow-lg">
+              <Menu.Button className="inline-flex items-center relative rounded-full hover:shadow-lg">
                 <img
                   src={user?.image}
                   alt=""
@@ -94,10 +97,9 @@ const ChatList = () => {
                         <button
                           className={`${
                             active
-                              ? "bg-gray-200 dark:bg-gray-500 dark:text-white "
+                              ? "bg-gray-200 dark:bg-gray-500 dark:text-white"
                               : "text-gray-900 dark:text-white"
-                          } 
-                    group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
                           onClick={toggleTheme}
                         >
                           {themeMode === "light" ? "Dark" : "Light"} Theme
@@ -106,32 +108,17 @@ const ChatList = () => {
                     </Menu.Item>
                   </div>
 
-                  {/* <div className="px-1 py-1">
-                  <Menu.Item>
-                    {({ active }) => (
-                      <button
-                        className={`${active ? "bg-gray-200 dark:bg-gray-500 dark:text-white " : "text-gray-900 dark:text-white"} 
-                    group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                      >
-                        <ProfileModal/>
-                      </button>
-                    )}
-                  </Menu.Item>
-                </div> */}
-
                   <div className="px-1 py-1">
                     <Menu.Item>
                       {({ active }) => (
                         <button
                           className={`${
                             active
-                              ? "bg-gray-200 dark:bg-gray-500 dark:text-white "
+                              ? "bg-gray-200 dark:bg-gray-500 dark:text-white"
                               : "text-gray-900 dark:text-white"
-                          } 
-                    group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                          // onClick={handleSignout}
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                          onClick={signoutHandler}
                         >
-                          {/* {loading ? "Loading" : "Signout"} */}
                           Signout
                         </button>
                       )}
@@ -151,9 +138,9 @@ const ChatList = () => {
           />
           <AddModal />
         </div>
-        <div className="my-3 px-4">
+        <div className="flex-grow overflow-y-auto px-4">
           {chatLoading ? (
-            <div className=" flex items-start justify-center">
+            <div className="flex items-start justify-center">
               <TailSpin
                 visible={true}
                 height="50"
@@ -166,35 +153,52 @@ const ChatList = () => {
               />
             </div>
           ) : (
-            chats?.map((chat) => {
-              return (
-                <div
-                  key={chat._id}
-                  onClick={() => setSelectedChat(chat)}
-                  className={`my-2 px-3 py-2 border dark:border-gray-600 rounded-md flex items-center cursor-pointer ${selectedChat === chat ? "bg-gray-900 text-white dark:bg-white dark:text-black" : ""}`}
-                >
+            chats && chats?.map((chat) => (
+              <div
+                key={chat?._id}
+                onClick={() => setSelectedChat(chat)}
+                className={`my-2 px-3 py-2 border dark:border-gray-600 rounded-md flex items-center cursor-pointer ${
+                  selectedChat === chat
+                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
+                    : ""
+                }`}
+              >
+                {chat.isGroupChat ? (
+                  <div className="flex -space-x-7 mr-3">
+                    <img
+                      src="https://avatar.iran.liara.run/public/60"
+                      className="w-10 h-10 rounded-full"
+                      alt=""
+                    />
+                    <img
+                      src="https://avatar.iran.liara.run/public/25"
+                      className="w-10 h-10 rounded-full"
+                      alt=""
+                    />
+                    <img
+                      src={chat.groupAdmin.image}
+                      className="w-10 h-10 rounded-full"
+                      alt=""
+                    />
+                  </div>
+                ) : (
                   <img
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRimL0VOuLLbDPzsk26k5frEfhPZlcvIFkTHepPuqXA&s"
+                    src={getSender(user, chat.users)?.image}
                     alt=""
                     className="w-10 h-10 rounded-full mr-3"
                   />
-                  <h1 className="capitalize">
+                )}
+                <div className="flex flex-col">
+                  <h1 className="capitalize font-medium">
                     {!chat.isGroupChat
-                      ? getSender(user, chat.users)
+                      ? getSender(user, chat.users)?.name
                       : chat.chatName}
                   </h1>
+                  <h1 className="text-xs truncate">{chat?.latestMessage?.content}</h1>
                 </div>
-              );
-            })
+              </div>
+            ))
           )}
-          {/* {
-                chats?.map(chat => {
-                    return <div key={chat._id} className='my-2 px-3 py-2 border dark:border-gray-600 rounded-md flex items-center '>
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtRimL0VOuLLbDPzsk26k5frEfhPZlcvIFkTHepPuqXA&s" alt="" className='w-10 h-10 rounded-full mr-3'/>
-                        <h1>{chat.chatName}</h1>
-                    </div>
-                })
-            } */}
         </div>
       </div>
     </div>

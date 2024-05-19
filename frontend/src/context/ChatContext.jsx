@@ -7,7 +7,7 @@ export const useChatContext = () => {
 }
 
 export const ChatProvider = ({children}) => {
-    const [user,setUser] = useState()
+    const [user,setUser] = useState(JSON.parse(localStorage.getItem("userInfo")) || null)
     const [chats,setChats] = useState([])
     const [selectedChat,setSelectedChat] = useState()
     

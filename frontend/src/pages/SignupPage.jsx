@@ -58,7 +58,7 @@ const SignupPage = () => {
   return (
     <div>
         {/* <img src={ChatLogo} alt="" className=''/> */}
-        <div className="w-1/4 mx-auto border border-black/[0.2] rounded-lg mt-8">
+        <div className="w-3/4 md:w-1/2 lg:w-1/4 mx-auto border border-black/[0.2] rounded-lg mt-8">
       <h1 className="text-2xl text-center my-2 font-medium">Signup</h1>
       <form
         onSubmit={handleSubmit}

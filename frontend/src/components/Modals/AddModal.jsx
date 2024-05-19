@@ -121,10 +121,11 @@ export default function AddModal() {
                       </Tab.List>
                       <Tab.Panels className="mt-1 p-2">
                         <Tab.Panel>
-                          <AllUsers closeModal={()=>closeModal}/>
+                          <AllUsers closeModal={closeModal}/>
                         </Tab.Panel>
                         <Tab.Panel>
-                          <CreateGroup/>
+                          {/* <CreateGroup closeModal={closeModal}/> */}
+                          <h1>Working On Group Chat</h1> 
                         </Tab.Panel>
                       </Tab.Panels>
                     </Tab.Group>
