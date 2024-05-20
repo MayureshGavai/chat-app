@@ -14,7 +14,7 @@ import GroupModal from "./Modals/GroupModal";
 import ProfileModal from "./Modals/ProfileModal";
 import { TailSpin } from "react-loader-spinner";
 
-const ENDPOINT = "http://localhost:3000";
+const ENDPOINT = import.meta.env.VITE_BACKEND_URL;
 let socket, selectedChatCompare;
 
 const ChatView = ({ fetchAgain, setFetchAgain }) => {
@@ -78,7 +78,7 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
       });
     });
 
-    socket.on("message recieved", (newMessageRecieved) => {
+    socket.on("message received", (newMessageRecieved) => {
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageRecieved.chat._id

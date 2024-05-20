@@ -41,7 +41,7 @@ const server = http.createServer(app);
 const io = new SocketServer(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5173", // Allow your frontend URL
+    origin: process.env.FRONTEND_URL, // Allow your frontend URL
   },
 });
 

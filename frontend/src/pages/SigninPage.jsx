@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ChatLogo from '../assets/ChatLogo.png'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -14,20 +14,48 @@ const SigninPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function togglePasswordVisibility() {
+  const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
   }
 
+  useEffect(()=>{
+    const user = localStorage.getItem('userInfo')
+    if(user){
+      navigate('/')
+      toast.success('User already signed in',{
+        position:"top-center"
+      })
+    }
+  },[])
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!email || !password){
+      toast.error("All fields are required", {
+        position: "top-center",
+      });
+      return;
+    }
+
+    if(!isValidEmail(email)){
+      toast.error("Please enter a valid email address", {
+        position: "top-center",
+      });
+      return;
+    }
+
     const {data} = await axios.post('http://localhost:3000/api/user/signin',{email,password})
-    console.log(data)
+    // console.log(data)
     if(data){
       setEmail("");
       setPassword("");
       localStorage.setItem("userInfo",JSON.stringify(data))
-      setUser(JSON.parse(localStorage.getItem("userInfo")))
+      setUser(data)
       toast.success("Signin Successful.!!",{
         position:"top-center"
       })

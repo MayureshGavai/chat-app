@@ -1,6 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import ChatLogo from "../assets/ChatLogo.png";
 import DarkChatLogo from "../assets/DarkChatLogo.png";
+import DefaultAvatar from "../assets/DefaultAvatar.jpg"
 import { useChatContext } from "../context/ChatContext";
 import { IoAdd } from "react-icons/io5";
 import axios from "axios";
@@ -16,6 +17,7 @@ const ChatList = ({ fetchAgain }) => {
   const navigate = useNavigate();
   const { themeMode, toggleTheme } = useTheme();
   const [chatLoading, setChatLoading] = useState(false);
+  const [searchQuery,setSearchQuery] = useState("")
 
   const getSender = (loggedUser, users) => {
     return users[0]?._id === loggedUser._id ? users[1] : users[0];
@@ -33,9 +35,9 @@ const ChatList = ({ fetchAgain }) => {
       const data = res.data;
       setChats(Array.isArray(data) ? data : []);
     } catch (error) {
-      toast.error(error.message, {
-        position: "top-center",
-      });
+      // toast.error(error.message, {
+      //   position: "top-center",
+      // });
       console.error(error.message);
     } finally {
       setChatLoading(false);
@@ -53,6 +55,15 @@ const ChatList = ({ fetchAgain }) => {
       position: "top-center",
     });
   };
+
+  const filteredChats = chats.filter(chat => {
+    if (chat.isGroupChat) {
+      return chat.chatName.toLowerCase().includes(searchQuery.toLowerCase());
+    } else {
+      const sender = getSender(user, chat.users);
+      return sender?.name.toLowerCase().includes(searchQuery.toLowerCase());
+    }
+  });
 
   return (
     <div
@@ -73,11 +84,19 @@ const ChatList = ({ fetchAgain }) => {
           >
             <div className="p-0 m-0 w-8 h-8">
               <Menu.Button className="inline-flex items-center relative rounded-full hover:shadow-lg">
-                <img
-                  src={user?.image}
+                {
+                  user?.image ? (
+                    <img
+                    src={user?.image ? user.image : DefaultAvatar}
+                    alt=""
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                  ):(<img
+                  src={DefaultAvatar}
                   alt=""
                   className="w-full h-full object-cover rounded-full"
-                />
+                />) 
+                }
               </Menu.Button>
             </div>
             <Transition
@@ -133,73 +152,90 @@ const ChatList = ({ fetchAgain }) => {
         <div className="my-3 px-4 flex justify-between items-center">
           <input
             type="text"
+            value={searchQuery}
+            onChange={(e)=>setSearchQuery(e.target.value)}
             className="w-full mr-2 px-2 py-1 border rounded-md bg-transparent dark:text-white dark:border-gray-600"
             placeholder="Search"
           />
           <AddModal />
         </div>
         <div className="flex-grow overflow-y-auto px-4">
-          {chatLoading ? (
-            <div className="flex items-start justify-center">
-              <TailSpin
-                visible={true}
-                height="50"
-                width="50"
-                color="#2563EB"
-                ariaLabel="tail-spin-loading"
-                radius="10"
-                wrapperStyle={{}}
-                wrapperClass=""
+  {chatLoading ? (
+    <div className="flex items-start justify-center">
+      <TailSpin
+        visible={true}
+        height="50"
+        width="50"
+        color="#2563EB"
+        ariaLabel="tail-spin-loading"
+        radius="10"
+        wrapperStyle={{}}
+        wrapperClass=""
+      />
+    </div>
+  ) : (
+    <>
+      {filteredChats.length === 0 && (
+        <div className="text-center text-gray-500 italic mt-4">
+          No chat found
+        </div>
+      )}
+
+      {filteredChats.length === 0 && chats.length === 0 && (
+        <div className="text-center text-gray-500 italic mt-4">
+          Start a conversation by selecting users to chat
+        </div>
+      )}
+
+      {Array.isArray(filteredChats) && filteredChats?.map((chat) => (
+        <div
+          key={chat?._id}
+          onClick={() => setSelectedChat(chat)}
+          className={`my-2 px-3 py-2 border dark:border-gray-600 rounded-md flex items-center cursor-pointer ${
+            selectedChat === chat
+              ? "bg-gray-900 text-white dark:bg-white dark:text-black"
+              : ""
+          }`}
+        >
+          {chat.isGroupChat ? (
+            <div className="flex -space-x-7 mr-3">
+              <img
+                src="https://avatar.iran.liara.run/public/60"
+                className="w-10 h-10 rounded-full"
+                alt=""
+              />
+              <img
+                src="https://avatar.iran.liara.run/public/25"
+                className="w-10 h-10 rounded-full"
+                alt=""
+              />
+              <img
+                src={chat.groupAdmin.image}
+                className="w-10 h-10 rounded-full"
+                alt=""
               />
             </div>
           ) : (
-            Array.isArray(chats) && chats?.map((chat) => (
-              <div
-                key={chat?._id}
-                onClick={() => setSelectedChat(chat)}
-                className={`my-2 px-3 py-2 border dark:border-gray-600 rounded-md flex items-center cursor-pointer ${
-                  selectedChat === chat
-                    ? "bg-gray-900 text-white dark:bg-white dark:text-black"
-                    : ""
-                }`}
-              >
-                {chat.isGroupChat ? (
-                  <div className="flex -space-x-7 mr-3">
-                    <img
-                      src="https://avatar.iran.liara.run/public/60"
-                      className="w-10 h-10 rounded-full"
-                      alt=""
-                    />
-                    <img
-                      src="https://avatar.iran.liara.run/public/25"
-                      className="w-10 h-10 rounded-full"
-                      alt=""
-                    />
-                    <img
-                      src={chat.groupAdmin.image}
-                      className="w-10 h-10 rounded-full"
-                      alt=""
-                    />
-                  </div>
-                ) : (
-                  <img
-                    src={getSender(user, chat.users)?.image}
-                    alt=""
-                    className="w-10 h-10 rounded-full mr-3"
-                  />
-                )}
-                <div className="flex flex-col">
-                  <h1 className="capitalize font-medium">
-                    {!chat.isGroupChat
-                      ? getSender(user, chat.users)?.name
-                      : chat.chatName}
-                  </h1>
-                  <h1 className="text-xs truncate">{chat?.latestMessage?.content}</h1>
-                </div>
-              </div>
-            ))
+            <img
+              src={getSender(user, chat.users)?.image ? getSender(user, chat.users).image : DefaultAvatar}
+              alt=""
+              className="w-10 h-10 rounded-full mr-3"
+            />
           )}
+          <div className="flex flex-col">
+            <h1 className="capitalize font-medium">
+              {!chat.isGroupChat
+                ? getSender(user, chat.users)?.name
+                : chat.chatName}
+            </h1>
+            <h1 className="text-xs truncate">{chat?.latestMessage?.content}</h1>
+          </div>
         </div>
+      ))}
+    </>
+  )}
+</div>
+
       </div>
     </div>
   );

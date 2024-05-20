@@ -16,6 +16,16 @@ const SignupPage = () => {
     );
     const navigate = useNavigate()
   
+    useEffect(()=>{
+      const user = localStorage.getItem('userInfo')
+      if(user){
+        navigate('/')
+        toast.success('User already signed in',{
+          position:"top-center"
+        })
+      }
+    },[])
+
     const fetchNewImage = async () => {
       try {
         const randomNumber = Math.floor(Math.random() * 100) + 1;
@@ -34,15 +44,35 @@ const SignupPage = () => {
       fetchNewImage();
     }, []);
   
-    function togglePasswordVisibility() {
+    const togglePasswordVisibility = () => {
       setIsPasswordVisible((prevState) => !prevState);
     }
 
+    const isValidEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
+
+
     const handleSubmit = async(e) =>{
       e.preventDefault()
+      if(!name || !email || !password || !image){
+        toast.error("All fields are required", {
+          position: "top-center",
+        });
+        return;
+      }
+
+      if(!isValidEmail(email)){
+        toast.error("Please enter a valid email address", {
+          position: "top-center",
+        });
+        return;
+      }
+
       const {data} = await axios.post('http://localhost:3000/api/user',{name,email,password,image})
       if(data){
-        console.log(data)
+        // console.log(data)
         setName("")
         setEmail("")
         setPassword("")
