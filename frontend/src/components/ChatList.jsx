@@ -31,7 +31,7 @@ const ChatList = ({ fetchAgain }) => {
         },
       });
       const data = res.data;
-      setChats(data);
+      setChats(Array.isArray(data) ? data : []);
     } catch (error) {
       toast.error(error.message, {
         position: "top-center",
@@ -153,7 +153,7 @@ const ChatList = ({ fetchAgain }) => {
               />
             </div>
           ) : (
-            chats && chats?.map((chat) => (
+            Array.isArray(chats) && chats?.map((chat) => (
               <div
                 key={chat?._id}
                 onClick={() => setSelectedChat(chat)}

@@ -12,13 +12,14 @@ import io from "socket.io-client";
 import EmojiPicker from 'emoji-picker-react';
 import GroupModal from "./Modals/GroupModal";
 import ProfileModal from "./Modals/ProfileModal";
+import { TailSpin } from "react-loader-spinner";
 
 const ENDPOINT = "http://localhost:3000";
 let socket, selectedChatCompare;
 
 const ChatView = ({ fetchAgain, setFetchAgain }) => {
   const { themeMode } = useTheme();
-  const { user, selectedChat, setSelectedChat,setLastMessage } = useChatContext();
+  const { user, selectedChat, setSelectedChat } = useChatContext();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -95,6 +96,7 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
+    setLoading(true)
     try {
       const res = await axios.get(
         `http://localhost:3000/api/message/${selectedChat._id}`,
@@ -107,6 +109,7 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
       const data = res.data;
       setMessages(data);
       socket.emit("join chat", selectedChat._id);
+      setLoading(false)
     } catch (error) {
       console.log(error.message);
     }
@@ -213,13 +216,37 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
           </div>
 
           {/* Messages Part */}
-          <div
-            className={`p-3 flex-1 overflow-y-auto dark:text-white ${
+          {
+            loading ? (
+              <div className="flex items-start justify-center">
+              <TailSpin
+                visible={true}
+                height="50"
+                width="50"
+                color="#2563EB"
+                ariaLabel="tail-spin-loading"
+                radius="10"
+                wrapperStyle={{}}
+                wrapperClass=""
+              />
+            </div>
+            ) : messages.length === 0 ? (
+              <div className={`p-3 flex flex-col flex-1 items-center justify-center dark:text-white ${
+                themeMode === "dark" ? "bg-gray-900" : "bg-white"
+                  }`}>
+                <h1 className="text-6xl">👋</h1>
+                <div className="text-lg mt-3 flex flex-col justify-center items-center"><h1>No messages yet.</h1><h1>Say something to get the chat started!</h1></div>
+              </div>
+            ) : (
+              <div className={`p-3 flex-1 overflow-y-auto dark:text-white ${
               themeMode === "dark" ? "bg-gray-900" : "bg-white"
-            }`}
-          >
+                }`}
+              >
             <ScrollableChat messages={messages} />
-          </div>
+          </div>    
+            )
+          }
+          
 
           {/* Send Message Input */}
           <div className="relative h-14 px-3 py-4 flex items-center bg-white dark:bg-gray-900 dark:text-white border-t dark:dark:border-gray-600">

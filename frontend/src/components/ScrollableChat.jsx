@@ -19,7 +19,7 @@ const ScrollableChat = ({ messages }) => {
   };
 
   return (
-    <div className="p-3 overflow-y-auto h-full">
+      <div className="p-3 overflow-y-auto h-full">
       {messages && messages.map((m, i) => (
         <div key={m._id} className={`w-full my-1.5 flex ${m.sender._id === user._id ? "justify-end" : "justify-start"}`}>
           <div>

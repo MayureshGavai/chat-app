@@ -5,9 +5,9 @@ import { useNavigate } from "react-router-dom";
 import ChatView from "../components/ChatView";
 
 const HomePage = () => {
-  const { selectedChat } = useChatContext();
+  const { user, selectedChat } = useChatContext();
   const [fetchAgain, setFetchAgain] = useState(false);
-
+  
   return (
     <div className="w-full flex flex-col lg:flex-row h-screen">
       {/* ChatList */}

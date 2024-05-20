@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 const SignupPage = () => {
@@ -14,6 +14,7 @@ const SignupPage = () => {
     const [image, setImage] = useState(
       "https://www.pngitem.com/pimgs/m/579-5798505_user-placeholder-svg-hd-png-download.png"
     );
+    const navigate = useNavigate()
   
     const fetchNewImage = async () => {
       try {
@@ -48,6 +49,7 @@ const SignupPage = () => {
         toast.success("Signup Sucessful.!!",{
           position:"top-center"
         })
+        navigate('/signin')
       }else{
         toast.error("Signup failed",{
           position:"top-center"

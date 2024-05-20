@@ -3,9 +3,10 @@ import ChatLogo from '../assets/ChatLogo.png'
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import { useChatContext } from '../context/ChatContext';
 
 const SigninPage = () => {
- 
+  const {setUser} = useChatContext()
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [loading,setLoading] = useState(false)
   const navigate = useNavigate()
@@ -26,6 +27,7 @@ const SigninPage = () => {
       setEmail("");
       setPassword("");
       localStorage.setItem("userInfo",JSON.stringify(data))
+      setUser(JSON.parse(localStorage.getItem("userInfo")))
       toast.success("Signin Successful.!!",{
         position:"top-center"
       })
@@ -48,6 +50,7 @@ const SigninPage = () => {
       setEmail("");
       setPassword("");
       localStorage.setItem("userInfo",JSON.stringify(data))
+      setUser(JSON.parse(localStorage.getItem("userInfo")))
       toast.success("Signin Successful.!!",{
         position:"top-center"
       })
