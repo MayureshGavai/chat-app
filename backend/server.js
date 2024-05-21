@@ -18,7 +18,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'https://chat-app-three-brown.vercel.app'],
+  origin: ['http://localhost:3000', process.env.FRONTEND_URL],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 }));
