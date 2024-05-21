@@ -50,7 +50,7 @@ const SigninPage = () => {
     }
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/user/signin",
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/signin`,
         { email, password }
       );
       // console.log(data)
@@ -86,7 +86,7 @@ const SigninPage = () => {
     const guestPassword = "Guest";
     try {
       const { data } = await axios.post(
-        "http://localhost:3000/api/user/signin",
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/signin`,
         { email: guestMail, password: guestPassword }
       );
       console.log(data);

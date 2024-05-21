@@ -12,7 +12,7 @@ export const useAllUsers = () => {
         const fetchAllUsers = async () => {
             setLoading(true)
             try{
-                const res = await axios.get('http://localhost:3000/api/user',{
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user`,{
                     headers : {
                         Authorization : `Bearer ${user.token}`
                     }

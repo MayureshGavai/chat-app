@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import ChatList from "../components/ChatList";
 import { useChatContext } from "../context/ChatContext";
-import { useNavigate } from "react-router-dom";
 import ChatView from "../components/ChatView";
 
 const HomePage = () => {
-  const { user, selectedChat } = useChatContext();
+  const { selectedChat } = useChatContext();
   const [fetchAgain, setFetchAgain] = useState(false);
   
   return (

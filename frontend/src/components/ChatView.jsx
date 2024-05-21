@@ -14,7 +14,7 @@ import GroupModal from "./Modals/GroupModal";
 import ProfileModal from "./Modals/ProfileModal";
 import { TailSpin } from "react-loader-spinner";
 
-const ENDPOINT = import.meta.env.VITE_BACKEND_URL;
+const ENDPOINT = import.meta.env.VITE_API_BASE_URL;
 let socket, selectedChatCompare;
 
 const ChatView = ({ fetchAgain, setFetchAgain }) => {
@@ -99,7 +99,7 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
     setLoading(true)
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/message/${selectedChat._id}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/message/${selectedChat._id}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -119,7 +119,7 @@ const ChatView = ({ fetchAgain, setFetchAgain }) => {
     e.preventDefault();
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/message",
+        `${import.meta.env.VITE_API_BASE_URL}/api/message`,
         {
           content: newMessage,
           chatId: selectedChat._id,

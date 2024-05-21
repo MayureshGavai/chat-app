@@ -15,7 +15,7 @@ const AllUsers = ({ closeModal }) => {
     setLoadingChat(true);
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/chat",
+        `${import.meta.env.VITE_API_BASE_URL}/api/chat`,
         { userId },
         {
           headers: {

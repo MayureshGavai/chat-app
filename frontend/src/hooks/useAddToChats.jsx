@@ -12,7 +12,7 @@ export const useAddToChats = () => {
         const createChat = async({userId}) => {
             setLoading(true)
             try{
-                const res =  await axios.post("http://localhost:3000/api/chat",{userId},{
+                const res =  await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/chat`,{userId},{
                     headers : {
                         Authorization : `Bearer ${user.token}`
                     }

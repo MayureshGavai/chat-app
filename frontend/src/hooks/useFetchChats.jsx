@@ -13,7 +13,7 @@ export const useFetchChats = () => {
       setLoading(true);
       try {
         const userInfo = user || JSON.parse(localStorage.getItem("userInfo"));
-        const res = await axios.get("http://localhost:3000/api/chat", {
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/chat`, {
           headers: {
             Authorization: `Bearer ${userInfo.token}`,
           },

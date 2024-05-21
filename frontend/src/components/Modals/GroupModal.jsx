@@ -35,7 +35,7 @@ export default function GroupModal({ fetchAgain, setFetchAgain }) {
     }
     try {
       const res = await axios.get(
-        `http://localhost:3000/api/user/search?search=${search}`,
+        `${import.meta.env.VITE_API_BASE_URL}/api/user/search?search=${search}`,
         {
           headers: {
             Authorization: `Bearer ${user.token}`,

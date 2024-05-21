@@ -70,7 +70,7 @@ const SignupPage = () => {
         return;
       }
 
-      const {data} = await axios.post('http://localhost:3000/api/user',{name,email,password,image})
+      const {data} = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/user`,{name,email,password,image})
       if(data){
         // console.log(data)
         setName("")
