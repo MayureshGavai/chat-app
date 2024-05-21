@@ -41,7 +41,7 @@ const SigninPage = () => {
       });
       return;
     }
-
+    setLoading(true)
     if(!isValidEmail(email)){
       toast.error("Please enter a valid email address", {
         position: "top-center",
@@ -70,6 +70,7 @@ const SigninPage = () => {
   };
 
   const guestUser = async () => {
+    setLoading(true)
     const guestMail = "guest@gmail.com"
     const guestPassword = "Guest"
     const {data} = await axios.post('http://localhost:3000/api/user/signin',{email:guestMail,password:guestPassword})
@@ -179,6 +180,7 @@ const SigninPage = () => {
           type="submit"
           className={`w-full p-2 text-white  rounded-md hover:bg-black/[0.7] active:bg-black/[0.5] ${loading ? 'bg-stone-600': 'bg-black '}`}
           onClick={handleSubmit}
+          disabled={loading}
         >
           {loading ? "Loading" : "Submit"}
         </button>
@@ -190,6 +192,7 @@ const SigninPage = () => {
         type="submit"
         className={`w-full p-2 text-white  rounded-md hover:bg-green-600 active:bg-green-700 ${loading ? 'bg-stone-600': 'bg-black '}`}
         onClick={guestUser}
+        disabled={loading}
       >
           Guest User
         </button>
