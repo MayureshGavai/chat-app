@@ -1,32 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import ChatLogo from '../assets/ChatLogo.png'
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { useChatContext } from '../context/ChatContext';
+import React, { useEffect, useState } from "react";
+import ChatLogo from "../assets/ChatLogo.png";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useChatContext } from "../context/ChatContext";
 
 const SigninPage = () => {
-  const {setUser} = useChatContext()
+  const { setUser } = useChatContext();
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [loading,setLoading] = useState(false)
-  const navigate = useNavigate()
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prevState) => !prevState);
-  }
+  };
 
-  useEffect(()=>{
-    const user = localStorage.getItem('userInfo')
-    if(user){
-      navigate('/')
-      toast.success('User already signed in',{
-        position:"top-center"
-      })
+  useEffect(() => {
+    const user = localStorage.getItem("userInfo");
+    if (user) {
+      navigate("/");
+      toast.success("User already signed in", {
+        position: "top-center",
+      });
     }
-  },[])
+  }, []);
 
   const isValidEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -35,73 +35,96 @@ const SigninPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!email || !password){
+    if (!email || !password) {
       toast.error("All fields are required", {
         position: "top-center",
       });
       return;
     }
-    setLoading(true)
-    if(!isValidEmail(email)){
+    setLoading(true);
+    if (!isValidEmail(email)) {
       toast.error("Please enter a valid email address", {
         position: "top-center",
       });
       return;
     }
-
-    const {data} = await axios.post('http://localhost:3000/api/user/signin',{email,password})
-    // console.log(data)
-    if(data){
-      setEmail("");
-      setPassword("");
-      localStorage.setItem("userInfo",JSON.stringify(data))
-      setUser(data)
-      toast.success("Signin Successful.!!",{
-        position:"top-center"
-      })
-      setTimeout(()=>{
-        navigate("/")
-      },2000)
-    }else{
-      toast.error("Signin failed",{
-        position:"top-center"
-      })
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/user/signin",
+        { email, password }
+      );
+      // console.log(data)
+      if (data) {
+        setEmail("");
+        setPassword("");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setUser(data);
+        toast.success("Signin Successful.!!", {
+          position: "top-center",
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        toast.error("Signin failed", {
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message, {
+        position: "top-center",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   const guestUser = async () => {
-    setLoading(true)
-    const guestMail = "guest@gmail.com"
-    const guestPassword = "Guest"
-    const {data} = await axios.post('http://localhost:3000/api/user/signin',{email:guestMail,password:guestPassword})
-    console.log(data)
-    if(data){
-      setEmail("");
-      setPassword("");
-      localStorage.setItem("userInfo",JSON.stringify(data))
-      setUser(JSON.parse(localStorage.getItem("userInfo")))
-      toast.success("Signin Successful.!!",{
-        position:"top-center"
-      })
-      setTimeout(()=>{
-        navigate("/")
-      },2000)
-    }else{
-      toast.error("Signin failed",{
-        position:"top-center"
-      })
+    setLoading(true);
+    const guestMail = "guest@gmail.com";
+    const guestPassword = "Guest";
+    try {
+      const { data } = await axios.post(
+        "http://localhost:3000/api/user/signin",
+        { email: guestMail, password: guestPassword }
+      );
+      console.log(data);
+      if (data) {
+        setEmail("");
+        setPassword("");
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        setUser(JSON.parse(localStorage.getItem("userInfo")));
+        toast.success("Signin Successful.!!", {
+          position: "top-center",
+        });
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
+      } else {
+        toast.error("Signin failed", {
+          position: "top-center",
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+      toast.error(error.message, {
+        position: "top-center",
+      });
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="w-3/4 md:w-1/2 lg:w-1/4 mx-auto border rounded-lg mt-8 py-2">
       <div className="flex flex-col items-center justify-center mt-3">
-      <div className="flex flex-col items-center justify-center text-lg">
-          <img src={ChatLogo} alt="" className='w-12'/>
+        <div className="flex flex-col items-center justify-center text-lg">
+          <img src={ChatLogo} alt="" className="w-12" />
           {/* <PiChatCircleTextFill className="text-5xl text-blue-500" /> */}
           {/* <h1 className="ml-0.5 -mt-1 font-semibold text-center">Chat App</h1> */}
         </div>
-    </div>
+      </div>
       <h1 className="text-4xl text-center my-4 font-medium">Signin</h1>
       <form onSubmit={handleSubmit} className="px-3 pt-3">
         <div className="mb-3">
@@ -178,28 +201,30 @@ const SigninPage = () => {
         </h1>
         <button
           type="submit"
-          className={`w-full p-2 text-white  rounded-md hover:bg-black/[0.7] active:bg-black/[0.5] ${loading ? 'bg-stone-600': 'bg-black '}`}
+          className={`w-full p-2 text-white  rounded-md hover:bg-black/[0.7] active:bg-black/[0.5] ${
+            loading ? "bg-stone-600" : "bg-black "
+          }`}
           onClick={handleSubmit}
           disabled={loading}
         >
           {loading ? "Loading" : "Submit"}
         </button>
-        
       </form>
       <div className="px-3">
-      <hr className="my-3 border border-black/[0.2] border-dashed"/>
-      <button
-        type="submit"
-        className={`w-full p-2 text-white  rounded-md hover:bg-green-600 active:bg-green-700 ${loading ? 'bg-stone-600': 'bg-black '}`}
-        onClick={guestUser}
-        disabled={loading}
-      >
+        <hr className="my-3 border border-black/[0.2] border-dashed" />
+        <button
+          type="submit"
+          className={`w-full p-2 text-white  rounded-md hover:bg-green-600 active:bg-green-700 ${
+            loading ? "bg-stone-600" : "bg-black "
+          }`}
+          onClick={guestUser}
+          disabled={loading}
+        >
           Guest User
         </button>
       </div>
-      
     </div>
-  )
-}
+  );
+};
 
-export default SigninPage
+export default SigninPage;

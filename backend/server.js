@@ -17,7 +17,11 @@ connectDB();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://chat-app-three-brown.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 app.use(morgan("dev"));
 app.use(express.json());
 
@@ -27,13 +31,13 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/message', messageRoutes);
 
 // Error handling middleware
-app.use(notFound);
+// app.use(notFound);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
-  res.json({ message: 'Hello world' });
+  res.send('server is running');
 });
 
 const server = http.createServer(app);
